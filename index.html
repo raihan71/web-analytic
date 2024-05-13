@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Web Analytics</title>
+</head>
+<body>
+  <nav>
+    <ul>
+      <li>home</li>
+      <li>data</li>
+      <li>about us</li>
+    </ul>
+  </nav>
+  <h1>hello world</h1>
+  <main>
+    <canvas id="myChart"></canvas>
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    const ctx = document.getElementById('myChart');
+    var customers;
+    var countries;
+    new Promise((resolve, reject) => {
+    fetch('./data/customer.json')
+        .then((resp) => resp.json())
+        .then((items) => {
+          customers = items;
+          countries = customers.map(item => item.country)
+          console.log(countries);
+          new Chart(ctx, {
+            type: 'bar',
+            data: {
+              labels: countries,
+              datasets: [{
+                label: '# data customer from every country',
+                data: [12, 19, 3, 5, 2, 3],
+                borderWidth: 1
+              }]
+            },
+            options: {
+              scales: {
+                y: {
+                  beginAtZero: true
+                }
+              }
+            }
+          });
+        })
+        .catch(err => {
+            reject(err)
+      });
+    });
+
+  </script>
+</body>
+</html>
