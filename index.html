@@ -8,28 +8,51 @@
 <body>
   <nav>
     <ul>
-      <li>home</li>
-      <li>data</li>
-      <li>about us</li>
+      <li><a href="/">home</a></li>
+      <li><a href="/">data</a></li>
+      <li><a href="/">about us</a></li>
     </ul>
   </nav>
-  <h1>hello world</h1>
   <main>
-    <canvas id="myChart"></canvas>
+    <h1>hello world</h1>
+    <canvas id="donutChart"></canvas>
+    <canvas id="barChart"></canvas>
   </main>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script>
-    const ctx = document.getElementById('myChart');
-    var customers;
-    var countries;
+    const donutChart = document.getElementById('donutChart');
+    const barChart = document.getElementById('barChart');
+    
+    let customers;
+    let countries;
     new Promise((resolve, reject) => {
-    fetch('./data/customer.json')
-        .then((resp) => resp.json())
-        .then((items) => {
-          customers = items;
-          countries = customers.map(item => item.country)
-          console.log(countries);
-          new Chart(ctx, {
+      fetch('./data/customer.json')
+      .then((resp) => resp.json())
+      .then((items) => {
+        customers = items;
+        countries = customers.map(item => item.country)
+        console.log(countries);
+        new Chart(barChart, {
+          type: 'bar',
+          data: {
+            labels: countries,
+            datasets: [{
+              label: '# data customer from every country',
+              data: [12, 19, 3, 5, 2, 3],
+              borderWidth: 1
+            }]
+          },
+          options: {
+            scales: {
+              y: {
+                beginAtZero: true
+              }
+            }
+          }
+        });
+        
+        [1,2,3,5].forEach(element => {
+          new Chart(donutChart, {
             type: 'bar',
             data: {
               labels: countries,
@@ -47,12 +70,13 @@
               }
             }
           });
-        })
-        .catch(err => {
-            reject(err)
+        });
+      })
+      .catch(err => {
+        reject(err)
       });
     });
-
+    
   </script>
 </body>
 </html>
